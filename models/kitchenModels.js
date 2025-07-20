@@ -163,8 +163,8 @@ class kitchenModels {
     try {
       connection = await db.getConnection();
       await connection.beginTransaction();
-      console.log("from kitchen models");
-      console.log(clientObj);
+      //console.log("from kitchen models");
+      //console.log(clientObj);
 
       const query = `
                 INSERT INTO orders (user_id,table_no)

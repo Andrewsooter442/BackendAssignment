@@ -13,7 +13,7 @@ class AdminModels {
       );
       return result.insertId;
     } catch (error) {
-      console.error("Error creating category:", error);
+      console.error("Error creating category.", error);
       throw new Error("Failed to create category.");
     } finally {
       if (connection) connection.release();
@@ -30,7 +30,7 @@ class AdminModels {
       );
       return rows[0];
     } catch (error) {
-      console.error("Error fetching category:", error);
+      console.error("Error fetching category.", error);
       throw new Error("Failed to fetch category.");
     } finally {
       if (connection) connection.release();
@@ -47,7 +47,7 @@ class AdminModels {
       );
       return result.affectedRows > 0;
     } catch (error) {
-      console.error("Error updating category:", error);
+      console.error("Error updating category.", error);
       throw new Error("Failed to update category.");
     } finally {
       if (connection) connection.release();
@@ -63,7 +63,7 @@ class AdminModels {
       );
       return rows;
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error("Error fetching categories.", error);
       throw new Error("Failed to fetch categories.");
     } finally {
       if (connection) connection.release();
@@ -82,7 +82,7 @@ class AdminModels {
       );
       return result.insertId;
     } catch (error) {
-      console.error("Error creating item:", error);
+      console.error("Error creating item.", error);
       throw new Error("Failed to create item.");
     } finally {
       if (connection) connection.release();
@@ -99,7 +99,7 @@ class AdminModels {
       );
       return rows[0];
     } catch (error) {
-      console.error("Error fetching item:", error);
+      console.error("Error fetching item.", error);
       throw new Error("Failed to fetch item.");
     } finally {
       if (connection) connection.release();
@@ -117,7 +117,7 @@ class AdminModels {
       );
       return result.affectedRows > 0;
     } catch (error) {
-      console.error("Error updating item:", error);
+      console.error("Error updating item.", error);
       throw new Error("Failed to update item.");
     } finally {
       if (connection) connection.release();
