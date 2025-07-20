@@ -1,3 +1,5 @@
+UPDATE users SET isAdmin = true WHERE name=admin;
+UPDATE users SET isCheff = true WHERE name=cheff;
 INSERT INTO categories (name) VALUES
 ('Appetizers'),
 ('Main Courses'),
