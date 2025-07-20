@@ -17,4 +17,6 @@ router.post('/addItem', adminController.handelPostAddItem);
 router.get('/editItem/:id', adminController.handelGetEditItemPage);
 router.post('/editItem/:id', adminController.handelPostEditItem);
 
+router.get('/viewOldOrders', adminController.handelGetViewOldOrders)
+
 export { router };

@@ -10,17 +10,17 @@ async function handelGetHome(req, res) {
         req.clientObj.isCheff = is_cheff;
         //console.log("comming from controller kitchen. ")
         //console.log(menu);
+            const orders = await kitchenModels.getItemOrdersNotCompleted();
+            const items = await kitchenModels.getItems();
 
         if (req.clientObj.isCheff){
-            const orders = await kitchenModels.getOrders();
-            const items = await kitchenModels.getItems();
             //console.log("comming from controllers kitchen.")
             //console.log(orders);
             res.render("homeCheff.ejs", {orders: orders, items: items, clientObj: req.clientObj});
         }
         else{
             const menu = await kitchenModels.getCategoriesAndItems();
-            res.render("home.ejs", { menu: menu, clientObj: req.clientObj });
+            res.render("home.ejs", { menu: menu, clientObj: req.clientObj,orders: orders, items: items });
         }
         //console.log('Data sent to home.ejs');
         //console.log(JSON.stringify(menu, null, 2));

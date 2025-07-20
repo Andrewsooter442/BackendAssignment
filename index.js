@@ -5,16 +5,14 @@ import {router as userRoters } from './routes/user.js'
 import {router as adminRoters } from './routes/admin.js'
 import {router as apiRotuers } from './routes/api.js'
 import cookieParser from 'cookie-parser';
-import activeTables from './config/activeTables.js'
 import { validateAdminRequest } from './middleware/admin/adminValidate.js'
 import { verifyJWT } from './middleware/login/verifyJWT.js'
+import { assignTable } from './config/activeTables.js'
+
 
 
 
 const app = express();
-
-// Initialize the activeTables to zero.
-activeTables.length = 0;
 
 app.set('view engine', 'ejs');
 app.set('views', path.resolve("./views"));
@@ -29,8 +27,8 @@ const PORT = process.env.PORT;
 
 
 app.use('/', userRoters);
-app.use('/api',verifyJWT,apiRotuers);
-app.use('/admin',verifyJWT, validateAdminRequest, adminRoters);
+app.use('/api',verifyJWT,assignTable,apiRotuers);
+app.use('/admin',verifyJWT, assignTable, validateAdminRequest, adminRoters);
 
 
 app.listen(PORT,() => console.log("Server started, listening on port 3000."));

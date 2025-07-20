@@ -82,8 +82,9 @@ body {
   border-radius: 0.5rem;
   box-shadow: 0 0.625rem 0.9375rem rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  min-width: 60%;
+  min-width: 100%;
 }
+
 
 .section-header {
   display: flex;
@@ -428,77 +429,6 @@ body {
   background-color: #dc2626;
 }
 
-@media (max-width: 64rem) {
-  .main-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .menu-container,
-  .cart-aside {
-    width: 100%;
-    max-width: 43.75rem;
-  }
-
-  .menu-list {
-    max-height: 60vh;
-  }
-
-  .item-grid {
-    grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
-  }
-}
-
-@media (max-width: 40rem) {
-  .main-header {
-    padding: 1rem;
-  }
-
-  .header-content {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.625rem;
-  }
-
-  .welcome-title {
-    font-size: 1.5rem;
-  }
-
-  .user-info {
-    font-size: 1rem;
-  }
-
-  .main-container {
-    padding: 1rem;
-    gap: 1rem;
-  }
-
-  .menu-container,
-  .cart-aside {
-    padding: 1rem;
-  }
-
-  .section-title,
-  .cart-title {
-    font-size: 1.5rem;
-  }
-
-  .filter-controls {
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-  }
-
-  .category-filter,
-  .admin-button {
-    width: 100%;
-  }
-
-  .item-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 .complete-item-btn {
   background-color: #22c55e;
   color: white;
@@ -537,4 +467,49 @@ body {
 
 .quantity-input.full-width {
   width: 100%;
+}
+
+/* old order Card Styles */
+.order-card {
+    background-color: #f9fafb;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.order-card:hover {
+    box-shadow: 0 0.625rem 0.9375rem rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.order-header {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+.order-details p {
+    color: #4b5563;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0.25rem 0;
+}
+
+.order-details strong {
+    color: #374151;
+}
+
+.status-completed {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: #ef4444;
+    font-weight: bold;
 }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Ordering System - Order History</title>
+    <link rel="stylesheet" href="/css/home.css">
+
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <h1 class="welcome-title">Order History</h1>
+            <a href="/" class="header-back-link">Back to Dashboard</a>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="menu-container">
+            <div class="section-header">
+                <h2 class="section-title"> ............................................  All Past Orders ..............................................</h2>
+            </div>
+
+            <div class="menu-list">
+                <% if (orders && orders.length > 0) { %>
+                    <div class="item-grid">
+                        <% orders.forEach(order => { %>
+                            <div class="order-card">
+                                <div class="order-header">
+                                    Order #<%= order.id %>
+                                </div>
+                                <div class="order-details">
+                                    <p><strong>User ID:</strong> <%= order.user_id %></p>
+                                    <p><strong>Table No:</strong> <%= order.table_no %></p>
+                                    <p><strong>Date:</strong> <%= new Date(order.created_at).toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %></p>
+                                    <p>
+                                        <strong>Status:</strong>
+                                        <% if (order.complete) { %>
+                                            <span class="status-completed">Completed</span>
+                                        <% } else { %>
+                                            <span class="status-pending">Pending</span>
+                                        <% } %>
+                                    </p>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <div class="no-items-message">
+                        <h3>No past orders were found.</h3>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

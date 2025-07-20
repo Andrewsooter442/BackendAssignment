@@ -14,8 +14,8 @@ async function handelPlaceOrder(req, res) {
 async function handelCompleteOrder(req,res) {
 
     try{
-        await kitchenModels.markComplete(req.body.orderId, req.body.itemId);
-        req.redirect('/');
+        const [sink]= await kitchenModels.markComplete(req.body.orderId, req.body.itemId);
+        res.redirect('/');
     }
     catch(error){
         console.error(error);
@@ -44,7 +44,7 @@ async function handelPostEditItem(req,res) {
         //console.log("comming from controller api")
         //console.log(req.body.item_id);
         await kitchenModels.editItemById(req.body);
-        res.redirect('/')
+        res.redirect('/');
     }
     catch(error){
         console.error(error);

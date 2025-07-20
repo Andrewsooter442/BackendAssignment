@@ -13,7 +13,9 @@
         <div class="header-content">
             <h1 class="welcome-title">Welcome, <%= clientObj.name %>!</h1>
             <div class="user-info">
+                <% if (!clientObj.isAdmin){ %> 
                 <p>Table No: <span class="highlight-text"><%= clientObj.table_no %></span></p>
+                <% } %>
                 <% if (clientObj.isAdmin) { %>
                     <p class="admin-tag">Admin Portal</p>
                 <% } %>
@@ -82,6 +84,7 @@
                                                 <label for="instructions-<%= item.item_id %>" class="instructions-label">Instructions (optional):</label>
                                                 <textarea id="instructions-<%= item.item_id %>" rows="2" class="instructions-input" placeholder="e.g., No onions, extra spicy"></textarea>
                                             </div>
+                                            <% if (!clientObj.isAdmin) { %>
                                             <button
                                                 class="add-to-cart-btn action-button"
                                                 data-item-id="<%= item.item_id %>"
@@ -90,6 +93,7 @@
                                             >
                                                 Add to Cart
                                             </button>
+                                            <% } %>
                                             <% if (clientObj.isAdmin) { %>
                                                 <button onclick="window.location.href='/api/editItem/<%=item.item_id%>'" class="admin-button edit-item-btn">
                                                     Edit Item
@@ -123,6 +127,101 @@
                 </button>
             </div>
         </section >
+        <% } %>
+
+
+        <!-- View Order Section-->
+        <% if (clientObj.isAdmin) { %>
+<section class="menu-container">
+            <div class="section-header">
+                <h2 class="section-title">Customers Orders Pending...</h2>
+                <button onclick="window.location.href='/admin/viewOldOrders'" class="admin-button add-category-btn">
+                            View Old Orders
+                        </button>
+
+            </div>
+
+            
+        <!-- Group the orders -->
+                <%
+                const groupedOrders = {};
+
+                for (let i = 0; i < orders.length; i++) {
+                    const currentOrder = orders[i];
+                    const orderId = currentOrder.order_id;
+                    let itemDetails = {};
+                    for (let j = 0; j < items.length; j++) {
+                        if (items[j].id === currentOrder.item_id) {
+                            itemDetails = items[j];
+                            break; 
+                        }
+                    }
+
+                    if (!groupedOrders[orderId]) {
+                        groupedOrders[orderId] = [];
+                    }
+
+                    const combinedItem = { ...currentOrder, ...itemDetails };
+                    groupedOrders[orderId].push(combinedItem);
+                }
+
+                const orderIds = Object.keys(groupedOrders);
+            %>
+            <div class="menu-list">
+                <% if (orderIds.length > 0) { %>
+                    <% orderIds.forEach(orderId => { %>
+                        <div class="category-section" data-order-id="<%= orderId %>">
+                            <div class="category-header">
+                                <h3 class="category-title">Order #<%= orderId %></h3>
+                            </div>
+
+                            <div class="item-grid">
+                                <% groupedOrders[orderId].forEach(item => { %>
+                                    <div class="item-card chef-item-card">
+                                        <div class="item-details">
+                                            <p class="item-quantity">Quantity: <%= item.quantity %></p>
+                                            <h4 class="item-name"><%= item.name %></h4>
+                                            <% if (item.instruction) { %>
+                                                <p class="item-instructions">
+                                                    <strong>Instructions:</strong> <%= item.instruction %>
+                                                </p>
+                                            <% } %>
+                                        </div>
+                                        <div class="item-actions">
+                                            <button
+                                                class="action-button complete-item-btn"
+                                                onclick="
+                                                    fetch('/api/completeOrder',{
+                                                                method: 'POST',
+                                                                headers: {
+                                                                'Content-Type': 'application/json'
+                                                                },
+                                                                body: JSON.stringify({
+                                                                    orderId: '<%=orderId%>',
+                                                                    itemId: '<%=item.item_id%>',
+                                                                }),
+                                                            }) 
+                                                            .then(response => {location.href='/';})
+                                                            .catch(error => {
+                                                                console.error('Error placing order:', error);
+                                                            });
+                                                ">
+                                                Mark as Done
+                                            </button>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="no-items-message">
+                        <h3>All orders are complete.</h3>
+                    </div>
+                <% } %>
+            </div>
+        </section>
+
 
         <% } %>
     </main>

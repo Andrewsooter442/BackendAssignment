@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-
 async function verifyJWT(req, res, next) {
     const token = req.cookies?.token;
     if (!token) {
