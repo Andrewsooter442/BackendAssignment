@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen - Active Orders</title>
+    <link rel="stylesheet" href="/css/home.css">
+
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <h1 class="welcome-title">Welcome, <%= clientObj.name %>!</h1>
+            <div class="user-info">
+                <p class="admin-tag">Active Orders</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="menu-container">
+            <div class="section-header">
+                <h2 class="section-title">Pending Orders</h2>
+            </div>
+
+            <%
+                const groupedOrders = {};
+
+                for (let i = 0; i < orders.length; i++) {
+                    const currentOrder = orders[i];
+                    const orderId = currentOrder.order_id;
+                    let itemDetails = {};
+                    for (let j = 0; j < items.length; j++) {
+                        if (items[j].id === currentOrder.item_id) {
+                            itemDetails = items[j];
+                            break; 
+                        }
+                    }
+
+                    if (!groupedOrders[orderId]) {
+                        groupedOrders[orderId] = [];
+                    }
+
+                    const combinedItem = { ...currentOrder, ...itemDetails };
+                    groupedOrders[orderId].push(combinedItem);
+                }
+
+                const orderIds = Object.keys(groupedOrders);
+            %>
+            
+
+            <div class="menu-list">
+                <% if (orderIds.length > 0) { %>
+                    <% orderIds.forEach(orderId => { %>
+                        <div class="category-section" data-order-id="<%= orderId %>">
+                            <div class="category-header">
+                                <h3 class="category-title">Order #<%= orderId %></h3>
+                            </div>
+
+                            <div class="item-grid">
+                                <% groupedOrders[orderId].forEach(item => { %>
+                                    <div class="item-card chef-item-card">
+                                        <div class="item-details">
+                                            <p class="item-quantity">Quantity: <%= item.quantity %></p>
+                                            <h4 class="item-name"><%= item.name %></h4>
+                                            <% if (item.instruction) { %>
+                                                <p class="item-instructions">
+                                                    <strong>Instructions:</strong> <%= item.instruction %>
+                                                </p>
+                                            <% } %>
+                                        </div>
+                                        <div class="item-actions">
+                                            <button
+                                                class="action-button complete-item-btn"
+                                                onclick="
+                                                    fetch('/api/completeOrder',{
+                                                                method: 'POST',
+                                                                headers: {
+                                                                'Content-Type': 'application/json'
+                                                                },
+                                                                body: JSON.stringify({
+                                                                    orderId: '<%=orderId%>',
+                                                                    itemId: '<%=item.item_id%>',
+                                                                }),
+                                                            }) 
+                                                            .catch(error => {
+                                                                console.error('Error placing order:', error);
+                                                            });
+                                                ">
+                                                Mark as Done
+                                            </button>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="no-items-message">
+                        <h3>All orders are complete. Great job WAGIE time to go back to your cage!</h3>
+                    </div>
+                <% } %>
+            </div> 
+        </section>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Admin Portal</title>
+    <link rel="stylesheet" href="/css/editMenu.css">
+</head>
+<body>
+
+    <main class="form-container">
+        <h1><%= title %></h1>
+
+        <form action="<%= action %>" method="POST">
+            <% if (type === 'category') { %>
+                <div class="form-group">
+                    <label for="name">Category Name:</label>
+                    <input type="text" id="name" name="name" value="" placeholder="eg. For cannibals" required>
+                </div>
+
+            <% } else if (type === 'item') { %>
+                <div class="form-group">
+                    <label for="name">Item Name:</label>
+                    <input type="text" id="name" name="name" value="" placeholder="eg. Brain" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Describe the item" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price ($):</label>
+                    <input type="number" id="price" name="price" step="0.01" value="" placeholder="eg. 1000.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category_id">Category:</label>
+                    <select id="category_id" name="category_id" required>
+                            <option value="" disabled>Select a Category</option>
+                            <% categories.forEach(category => { %>
+                            <option value="<%= category.id %>">
+                            <%= category.name %>
+                            </option>
+                        <% }); %>
+
+                    </select>
+                </div>
+            <% } %>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Save Changes</button>
+                <a href="/" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+
+        <% if (type === 'item') { %>
+            <hr>
+            <div class="add-category-link">
+                <a href="/admin/addCategory" class="btn-add-category">Add New Category</a>
+            </div>
+        <% } %>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Ordering System - Menu</title>
+    <link rel="stylesheet" href="/css/home.css">
+    <script src="/js/home.js" defer></script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <h1 class="welcome-title">Welcome, <%= clientObj.name %>!</h1>
+            <div class="user-info">
+                <p>Table No: <span class="highlight-text"><%= clientObj.table_no %></span></p>
+                <% if (clientObj.isAdmin) { %>
+                    <p class="admin-tag">Admin Portal</p>
+                <% } %>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Menu Section -->
+        <section class="menu-container">
+            <div class="section-header">
+                <h2 class="section-title">Our Menu</h2>
+                <div class="filter-controls">
+                    <!-- Category Filter -->
+
+                    <label for="categoryFilter" class="filter-label">Filter by Category:</label>
+                    <select id="categoryFilter" class="category-filter">
+                        <option value="all">All Categories</option>
+
+                        <% menu.categories.forEach(category => { %>
+                            <option value="<%= category.category_name%>"><%= category.category_name%>
+                            </option>
+                            <% }) %> 
+                    </select>
+
+                    <% if (clientObj.isAdmin) { %>
+                        <button onclick="window.location.href='/admin/addCategory'" class="admin-button add-category-btn">
+                            Add New Category
+                        </button>
+                        <button onclick="window.location.href='/admin/addItem'" class="admin-button add-category-btn">
+                            Add New Item
+                        </button>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Menu Categories and Items -->
+           <div id="menuContainer" class="menu-list">
+                <% menu.categories.forEach(category => { %>
+                    <% const itemsInCategory = menu.items.filter(item => item.category_id === category.category_id && item.item_id !== null); %>
+                    <% if (itemsInCategory.length > 0) { %>
+                        <div class="category-section" data-category="<%= category.category_name %>">
+                            <div class="category-header">
+                                <h3 class="category-title"><%= category.category_name %></h3>
+                                <% if (clientObj.isAdmin) { %>
+                                    <button onclick="window.location.href='/admin/editCategory/<%= category.category_id %>'" class="admin-link-button edit-category-btn">
+                                        Edit Category
+                                    </button>
+                                <% } %>
+                            </div>
+                            <div class="item-grid">
+
+                                <% itemsInCategory.forEach(item => { %>
+                                    <div class="item-card">
+                                        <div class="item-details">
+                                            <h4 class="item-name"><%= item.item_name %></h4>
+                                            <p class="item-description"><%= item.description %></p>
+                                            <p class="item-price">$<%= Number(item.price).toFixed(2) %></p>
+                                        </div>
+                                        <div class="item-actions">
+                                            <div class="quantity-control">
+                                                <label for="quantity-<%= item.item_id %>" class="quantity-label">Quantity:</label>
+                                                <input type="number" id="quantity-<%= item.item_id %>" value="1" min="1" class="quantity-input">
+                                            </div>
+                                            <div class="instructions-group">
+                                                <label for="instructions-<%= item.item_id %>" class="instructions-label">Instructions (optional):</label>
+                                                <textarea id="instructions-<%= item.item_id %>" rows="2" class="instructions-input" placeholder="e.g., No onions, extra spicy"></textarea>
+                                            </div>
+                                            <button
+                                                class="add-to-cart-btn action-button"
+                                                data-item-id="<%= item.item_id %>"
+                                                data-item-name="<%= item.item_name %>"
+                                                data-item-price="<%= item.price %>"
+                                            >
+                                                Add to Cart
+                                            </button>
+                                            <% if (clientObj.isAdmin) { %>
+                                                <button onclick="window.location.href='/api/editItem/<%=item.item_id%>'" class="admin-button edit-item-btn">
+                                                    Edit Item
+                                                </button>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        </div>
+                    <% } %>
+                <% }); %>
+            </div> 
+        </section>
+
+        <!-- Cart Section -->
+
+        <% if (!clientObj.isAdmin) { %>
+        <section class="cart-section" >
+            <h2 class="cart-title">Your Cart</h2>
+            <div id="cartItems" class="cart-items-list">
+                <p id="emptyCartMessage" class="empty-cart-message">Your cart is empty.</p>
+            </div>
+            <div class="cart-summary">
+                <div class="cart-total-row">
+                    <span>Total:</span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+                <button id="proceedToOrderBtn" class="proceed-to-order-btn action-button" disabled>
+                    Proceed to Order
+                </button>
+            </div>
+        </section >
+
+        <% } %>
+    </main>
+
+
+</body>
+</html>
