@@ -24,6 +24,13 @@ async function handelCompleteOrder(req,res) {
     
 }
 
+async function handelGetLogout(req,res) {
+    res.clearCookie('token');
+    res.redirect('/login');
+}
+
+
+
 async function handelGetEditItem(req,res) {
     try{
         const item_id = req.params.item_id;
@@ -53,4 +60,4 @@ async function handelPostEditItem(req,res) {
     
 }
 
-export { handelPlaceOrder, handelCompleteOrder, handelGetEditItem, handelPostEditItem };
+export { handelPlaceOrder, handelCompleteOrder, handelGetEditItem, handelPostEditItem,handelGetLogout };

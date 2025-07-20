@@ -29,6 +29,10 @@ async function handelGetHomePage(req, res) {
 }
 
 async function handelLogin(req, res) {
+  const token = req.cookies?.token;
+    if (token) {
+        return res.redirect('/');
+    }
   res.render("login.ejs");
 }
 
