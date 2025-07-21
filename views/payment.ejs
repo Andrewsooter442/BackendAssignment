@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Ordering System - Payment</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <h1 class="welcome-title">Complete Your Payment, <%= clientObj.name %>!</h1>
+            <div class="user-info">
+                <button onclick="window.location.href='/api/logout'">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="menu-container">
+            <div class="section-header">
+                <h2 class="section-title">Your Bill </h2>
+            </div>
+
+            <%
+                const groupedOrders = {};
+                let totalBill = 0;
+
+                // Group items by order
+                    for (let i = 0; i < orders.length; i++) {
+                        const currentOrder = orders[i];
+                        const orderId = currentOrder.order_id;
+                        let itemDetails = {};
+                        for (let j = 0; j < items.length; j++) {
+                            if (items[j].id === currentOrder.item_id) {
+                                itemDetails = items[j];
+                                break;
+                            }
+                        }
+
+                        if (!groupedOrders[orderId]) {
+                            groupedOrders[orderId] = {
+                                items: [],
+                                orderInfo: currentOrder
+                            };
+                        }
+
+                        const combinedItem = { ...currentOrder, ...itemDetails };
+                        groupedOrders[orderId].items.push(combinedItem);
+                    }
+                const orderIds = Object.keys(groupedOrders);
+            %>
+
+            <div class="menu-list">
+                    <% orderIds.forEach(orderId => { %>
+                        <% const orderData = groupedOrders[orderId]; %>
+                        <% let orderTotal = 0; %>
+                        <div class="category-section" data-order-id="<%= orderId %>">
+                            <div class="category-header">
+                                <h3 class="category-title">Order #<%= orderId %></h3>
+                            </div>
+                            <div class="item-grid">
+                                <% orderData.items.forEach(item => { %>
+                                    <% orderTotal += item.price * item.quantity; %>
+                                    <div class="item-card">
+                                        <div class="item-details">
+                                            <h4 class="item-name"><%= item.name %></h4>
+                                            <p class="item-description">Quantity: <%= item.quantity %></p>
+                                            <p class="item-price">$<%= Number(item.price * item.quantity).toFixed(2) %></p>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                            <div class="cart-summary">
+                                <div class="cart-total-row">
+                                    <span>Order Total:</span>
+                                    <span>$<%= Number(orderTotal).toFixed(2) %></span>
+                                </div>
+                            </div>
+                            <% totalBill += orderTotal; %>
+                        </div>
+                    <% }); %>
+            </div>
+
+        </section>
+ <% if (orderIds.length > 0) { %>
+            <section class="payment-section cart-section">
+                <h2 class="cart-title">Payment Details</h2>
+                <form id="paymentForm" action="/" method="GET">
+                    <div class="cart-summary">
+                        <div class="cart-total-row">
+                            <span>Total Bill:</span>
+                            <span id="totalBillDisplay">$<%= Number(totalBill).toFixed(2) %></span>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="form-group instructions-group">
+                            <label for="paymentMethod" class="instructions-label">Payment Method:</label>
+                            <select id="paymentMethod" name="method" class="category-filter">
+                                <option value="Monero">Monero</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="Bitcoin">Bitcoin</option>
+                                <option value="Cash">Cash</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="proceed-to-order-btn action-button">
+                            Pay Now 
+                        </button>
+                    </div>
+                </form>
+            </section>
+            <% } %>
+    </main>
+</body>
+</html>

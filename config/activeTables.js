@@ -3,8 +3,6 @@ const MAX_TABLES = 100;
 
 export async function assignTable(req, res, next) {
     const  ID  = req.clientObj.Id;
-    console.log(req.clientObj.Id);
-    console.log(activeTables);
 
     const existingTable = activeTables.find(table => table.userId === ID);
     if (existingTable) {

@@ -118,7 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 items: cart,
                 total: parseFloat(cartTotalElement.textContent.replace('$', ''))
             }),
-        }) 
+        }).then(Response =>{
+            window.location.href='/api/payment'
+        })
         .catch(error => {
             console.error('Error placing order:', error);
         });

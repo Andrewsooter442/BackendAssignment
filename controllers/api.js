@@ -2,10 +2,8 @@ import kitchenModels from "../models/kitchenModels.js";
 
 async function handelPlaceOrder(req, res) {
     try {
-        //console.log('comming from controller api')
-        //console.log(req.body);
-        //console.log(req.clientObj);
         const writeToDB = await kitchenModels.placeOrder(req.body,req.clientObj);
+        res.redirect('/api');
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal server cannot place the order" });
@@ -27,6 +25,19 @@ async function handelCompleteOrder(req,res) {
 async function handelGetLogout(req,res) {
     res.clearCookie('token');
     res.redirect('/login');
+}
+
+async function handelGetPayment(req,res) {
+    try{
+        const orders = await kitchenModels.getItemOrdersNotCompleted();
+        const items = await kitchenModels.getItems();
+        res.render("payment.ejs",{orders: orders, items: items, clientObj: req.clientObj});
+    }
+    catch(error){
+        console.error(error);
+        return res.status(500).json({ error: "Internal server cannot place the order" });
+    }
+ 
 }
 
 
@@ -60,4 +71,4 @@ async function handelPostEditItem(req,res) {
     
 }
 
-export { handelPlaceOrder, handelCompleteOrder, handelGetEditItem, handelPostEditItem,handelGetLogout };
+export { handelPlaceOrder, handelCompleteOrder, handelGetEditItem, handelPostEditItem,handelGetLogout ,handelGetPayment};
