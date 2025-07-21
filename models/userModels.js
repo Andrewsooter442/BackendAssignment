@@ -77,8 +77,6 @@ class UserModels{
             }
             const user = result[0];
             const hashedPassword = user.password_hash;
-            //console.log(hashedPassword, password); 
-            //console.log(bcrypt.compareSync(password, hashedPassword)); 
             return bcrypt.compareSync(password, hashedPassword);
         }
         catch(error){

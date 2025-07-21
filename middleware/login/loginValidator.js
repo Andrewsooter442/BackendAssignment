@@ -27,8 +27,6 @@ async function validateLoginData(req, res) {
     return res.render("login", { error: "Invalid username or password." });
   } else {
     const userId = await UserModels.getUserId(name);
-    const is_admin = await UserModels.isUserAdmin(userId);
-    const is_cheff = await UserModels.isUserCheff(userId);
 
     const token = generateToken(name, userId);
     res.cookie("token", token, { httpOnly: true });

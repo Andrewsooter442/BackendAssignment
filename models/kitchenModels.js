@@ -66,7 +66,6 @@ class kitchenModels {
 
     const incompleteCount = remaining[0].incomplete;
 
-    // 3. If no incomplete items, mark the main order as complete
     if (incompleteCount === 0) {
       const [orderUpdateResult] = await connection.execute(
         `UPDATE orders SET complete = TRUE WHERE id = ?`,
@@ -110,8 +109,6 @@ class kitchenModels {
         `);
 
       const menu = { categories, items };
-      //console.log("comming from models/kitchen");
-      //console.log(menu);
       return menu;
     } catch (error) {
       console.error(`Error getting the menu: ${error}`);
@@ -163,8 +160,6 @@ class kitchenModels {
     try {
       connection = await db.getConnection();
       await connection.beginTransaction();
-      //console.log("from kitchen models");
-      //console.log(clientObj);
 
       const query = `
                 INSERT INTO orders (user_id,table_no)

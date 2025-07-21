@@ -46,8 +46,6 @@ async function handelGetEditItem(req,res) {
     try{
         const item_id = req.params.item_id;
         const [item] = await kitchenModels.getItemById(item_id);
-        //console.log("comming from controller api");
-        //console.log(item[0]);
         res.render("itemEdit.ejs",{item: item});
     }
     catch(error){
@@ -59,8 +57,6 @@ async function handelGetEditItem(req,res) {
 async function handelPostEditItem(req,res) {
     try{
         req.body.item_id = req.params.item_id;
-        //console.log("comming from controller api")
-        //console.log(req.body.item_id);
         await kitchenModels.editItemById(req.body);
         res.redirect('/');
     }

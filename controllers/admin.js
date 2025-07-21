@@ -130,8 +130,6 @@ async function handelPostEditItem(req, res) {
 async function handelGetViewOldOrders(req, res) {
   try {
     const orders = await kitchenModels.getAllOrders();
-    //console.log("comming from controller admin.js");
-    //console.log(orders);
     res.render("viewOldOrder.ejs", {orders: orders});
   } catch (error) {
     console.error("Controller Error: Failed to update item.", error);

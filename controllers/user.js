@@ -1,5 +1,4 @@
 import userModels from "../models/userModels.js";
-import kitchenModels from "../models/kitchenModels.js";
 
 // User creations stuff.
 async function handelCreateNewUser(req, res) {
@@ -9,7 +8,7 @@ async function handelCreateNewUser(req, res) {
     await userModels.createNewUser({ name, mail, phone, hashedPassword });
   } catch (error) {
     console.error(`Error creating new user ${error}.`);
-    req.status(500).send("Failed to create new user.");
+    res.status(500).send("Failed to create new user.");
   } finally {
     res.redirect("/login");
   }

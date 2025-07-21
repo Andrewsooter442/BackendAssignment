@@ -107,13 +107,33 @@
                                 <option value="Cash">Cash</option>
                             </select>
                         </div>
-                        <button type="submit" class="proceed-to-order-btn action-button">
+                        <button type="submit" class="proceed-to-order-btn action-button" id="donePayment">
                             Pay Now 
                         </button>
                     </div>
                 </form>
             </section>
             <% } %>
+        const clientObj = <%- JSON.stringify(clientObj) %>;
     </main>
+    <script>
+        document.getElementById('donePayment').addEventListener('click', () => {
+      fetch('/api/donePayment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({clientObj: clientObj})
+      })
+      .then(response => {
+        if (response.ok){
+            window.location.href='/';
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    });
+    </script>
 </body>
 </html>
