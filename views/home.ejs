@@ -113,25 +113,26 @@
         </section>
 
         <!-- Cart Section -->
-
-        <% if (!clientObj.isAdmin) { %>
-        <section class="cart-section" >
-            <h2 class="cart-title">Your Cart</h2>
-            <div id="cartItems" class="cart-items-list">
-                <p id="emptyCartMessage" class="empty-cart-message">Your cart is empty.</p>
+        <form id="orderForm" action="/api/placeOrder" method="POST">
+    <section class="cart-section">
+        <h2 class="cart-title">Your Cart</h2>
+        <div id="cartItems" class="cart-items-list">
+            <p id="emptyCartMessage" class="empty-cart-message">Your cart is empty.</p>
+        </div>
+        <div class="cart-summary">
+            <input type="hidden" id="cartData" name="orderData">
+            
+            <div class="cart-total-row">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
             </div>
-            <div class="cart-summary">
-                <div class="cart-total-row">
-                    <span>Total:</span>
-                    <span id="cartTotal">$0.00</span>
-                </div>
-                <button id="proceedToOrderBtn" class="proceed-to-order-btn action-button" disabled>
-                    Proceed to Order
-                </button>
-            </div>
-        </section >
-        <% } %>
-
+            
+            <button type="submit" id="proceedToOrderBtn" class="proceed-to-order-btn action-button" disabled>
+                Proceed to Order
+            </button>
+        </div>
+    </section>
+</form>
 
         <!-- View Order Section-->
         <% if (clientObj.isAdmin) { %>

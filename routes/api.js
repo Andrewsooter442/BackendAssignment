@@ -1,5 +1,5 @@
 import express from "express";
-import { handelPlaceOrder, handelCompleteOrder, handelGetEditItem, handelPostEditItem,handelGetLogout, handelGetPayment} from "../controllers/api.js";
+import { handelPlaceOrder, handelCompleteOrder, handelGetEditItem, handelPostPaymentDone, handelPostEditItem,handelGetLogout, handelGetPayment} from "../controllers/api.js";
 
 const router = express.Router();
 
@@ -11,7 +11,8 @@ router.post('/placeOrder',handelPlaceOrder);
 router.post('/completeOrder',handelCompleteOrder);
 
 router.get('/logout',handelGetLogout);
-router.get('/payment', handelGetPayment);
+
+router.post('/paymentDone', handelPostPaymentDone);
 
 
 export { router };

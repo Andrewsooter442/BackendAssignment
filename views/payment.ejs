@@ -20,80 +20,36 @@
     </header>
 
     <main class="main-container">
-        <section class="menu-container">
-            <div class="section-header">
-                <h2 class="section-title">Your Bill </h2>
-            </div>
+        <% if (orders && orders.items && orders.items.length > 0) { %>
+            <section class="menu-container">
+                <div class="section-header">
+                    <h2 class="section-title">Your Bill</h2>
+                </div>
 
-            <%
-                const groupedOrders = {};
-                let totalBill = 0;
-
-                // Group items by order
-                    for (let i = 0; i < orders.length; i++) {
-                        const currentOrder = orders[i];
-                        const orderId = currentOrder.order_id;
-                        let itemDetails = {};
-                        for (let j = 0; j < items.length; j++) {
-                            if (items[j].id === currentOrder.item_id) {
-                                itemDetails = items[j];
-                                break;
-                            }
-                        }
-
-                        if (!groupedOrders[orderId]) {
-                            groupedOrders[orderId] = {
-                                items: [],
-                                orderInfo: currentOrder
-                            };
-                        }
-
-                        const combinedItem = { ...currentOrder, ...itemDetails };
-                        groupedOrders[orderId].items.push(combinedItem);
-                    }
-                const orderIds = Object.keys(groupedOrders);
-            %>
-
-            <div class="menu-list">
-                    <% orderIds.forEach(orderId => { %>
-                        <% const orderData = groupedOrders[orderId]; %>
-                        <% let orderTotal = 0; %>
-                        <div class="category-section" data-order-id="<%= orderId %>">
-                            <div class="category-header">
-                                <h3 class="category-title">Order #<%= orderId %></h3>
-                            </div>
-                            <div class="item-grid">
-                                <% orderData.items.forEach(item => { %>
-                                    <% orderTotal += item.price * item.quantity; %>
-                                    <div class="item-card">
-                                        <div class="item-details">
-                                            <h4 class="item-name"><%= item.name %></h4>
-                                            <p class="item-description">Quantity: <%= item.quantity %></p>
-                                            <p class="item-price">$<%= Number(item.price * item.quantity).toFixed(2) %></p>
-                                        </div>
+                <div class="menu-list">
+                    <div class="category-section">
+                        <div class="item-grid">
+                            <% orders.items.forEach(item => { %>
+                                <div class="item-card">
+                                    <div class="item-details">
+                                        <h4 class="item-name"><%= item.name %></h4>
+                                        <p class="item-description">Quantity: <%= item.quantity %></p>
+                                        <p class="item-price">$<%= Number(item.price * item.quantity).toFixed(2) %></p>
                                     </div>
-                                <% }); %>
-                            </div>
-                            <div class="cart-summary">
-                                <div class="cart-total-row">
-                                    <span>Order Total:</span>
-                                    <span>$<%= Number(orderTotal).toFixed(2) %></span>
                                 </div>
-                            </div>
-                            <% totalBill += orderTotal; %>
+                            <% }); %>
                         </div>
-                    <% }); %>
-            </div>
+                    </div>
+                </div>
+            </section>
 
-        </section>
- <% if (orderIds.length > 0) { %>
             <section class="payment-section cart-section">
                 <h2 class="cart-title">Payment Details</h2>
-                <form id="paymentForm" action="/" method="GET">
+                <form id="paymentForm" action="/api/paymentDone" method="POST">
                     <div class="cart-summary">
                         <div class="cart-total-row">
                             <span>Total Bill:</span>
-                            <span id="totalBillDisplay">$<%= Number(totalBill).toFixed(2) %></span>
+                            <span id="totalBillDisplay">$<%= Number(orders.total).toFixed(2) %></span>
                         </div>
                         <br>
                         <br>
@@ -107,33 +63,24 @@
                                 <option value="Cash">Cash</option>
                             </select>
                         </div>
+
+                        <input type="hidden" id="userId" name="userid" value="<%= clientObj.Id %>">
+                        
+                        <input type="hidden" id="orderId" name="orderId" value="<%= orders.orderId%>">
+                        <input type="hidden" name="totalBill" value="<%= orders.total %>">
                         <button type="submit" class="proceed-to-order-btn action-button" id="donePayment">
-                            Pay Now 
+                            Pay Now
                         </button>
                     </div>
                 </form>
             </section>
-            <% } %>
-        const clientObj = <%- JSON.stringify(clientObj) %>;
+        <% } else { %>
+            <section class="menu-container">
+                 <div class="section-header">
+                     <h2 class="section-title">You have no pending bills.</h2>
+                 </div>
+            </section>
+        <% } %>
     </main>
-    <script>
-        document.getElementById('donePayment').addEventListener('click', () => {
-      fetch('/api/donePayment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({clientObj: clientObj})
-      })
-      .then(response => {
-        if (response.ok){
-            window.location.href='/';
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    });
-    </script>
 </body>
 </html>

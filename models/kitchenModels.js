@@ -29,7 +29,30 @@ class kitchenModels {
       if (connection) connection.release();
     }
   }
+  static async makePayment(userObject){
+          let connection;
+          try{
+              connection = await db.getConnection();
+              const query = `
+                  INSERT INTO payment (order_id, user_id, total, tip, paid,method)
+                  VALUES (?, ?, ?, ?, ?, ?)
+              `
+              const values = [userObject.orderId, userObject.userid, userObject.totalBill, 0, true, userObject.method];
+              
+              const [result] = await connection.execute(query,values);
+              return result;
+          }
 
+          catch(error){
+              console.error(`Error completing payment${error}`);
+              throw new Error(`Failed to complete payment.`);
+          }
+          finally{
+              if (connection){
+                  connection.release();
+              }
+          }
+  }
   static async getAllOrders() {
     let connection;
     try {
@@ -45,7 +68,6 @@ class kitchenModels {
     }
   }
 
-
   static async markComplete(order_id, item_id) {
     let connection;
     try {
@@ -58,20 +80,19 @@ class kitchenModels {
         [order_id, item_id]
       );
 
-
-    const [remaining] = await connection.execute(
-      `SELECT COUNT(*) AS incomplete FROM order_items WHERE order_id = ? AND complete = FALSE`,
-      [order_id]
-    );
-
-    const incompleteCount = remaining[0].incomplete;
-
-    if (incompleteCount === 0) {
-      const [orderUpdateResult] = await connection.execute(
-        `UPDATE orders SET complete = TRUE WHERE id = ?`,
+      const [remaining] = await connection.execute(
+        `SELECT COUNT(*) AS incomplete FROM order_items WHERE order_id = ? AND complete = FALSE`,
         [order_id]
       );
-    }
+
+      const incompleteCount = remaining[0].incomplete;
+
+      if (incompleteCount === 0) {
+        const [orderUpdateResult] = await connection.execute(
+          `UPDATE orders SET complete = TRUE WHERE id = ?`,
+          [order_id]
+        );
+      }
       await connection.commit();
       return result;
     } catch (error) {
@@ -137,6 +158,40 @@ class kitchenModels {
       if (connection) connection.release();
     }
   }
+  static async getOrderAndItemById(order_id) {
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const [result] = await connection.execute(
+        `
+        SELECT
+          orders.*,
+          order_items.quantity,
+          order_items.instruction,
+          order_items.complete AS item_complete,
+          items.name AS item_name,
+          items.price,
+          items.description
+        FROM
+          orders
+        JOIN
+          order_items ON orders.id = order_items.order_id
+        JOIN
+          items ON order_items.item_id = items.id
+        WHERE
+          orders.id = ? AND orders.complete = FALSE;
+
+        `,
+        [order_id]
+      );
+      return result;
+    } catch (error) {
+      console.error(`Error getting item: ${error}`);
+      throw new Error("Failed to get the item.");
+    } finally {
+      if (connection) connection.release();
+    }
+  }
 
   static async editItemById(item) {
     let connection;
@@ -183,6 +238,7 @@ class kitchenModels {
         await connection.execute(query2, values2);
       }
       await connection.commit();
+      return order_id;
     } catch (error) {
       console.error(`Error placeing order: ${error}`);
       throw new Error("Failed to place the order.");

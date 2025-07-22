@@ -103,32 +103,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     
 
-    proceedToOrderBtn.addEventListener('click', () => {
-        if (cart.length === 0) {
-            alert('Your cart is empty. Please add items before proceeding to order.');
-            return;
-        }
+    const orderForm = document.getElementById('orderForm');
 
-        fetch('/api/placeOrder',{
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                items: cart,
-                total: parseFloat(cartTotalElement.textContent.replace('$', ''))
-            }),
-        }).then(Response =>{
-            window.location.href='/api/payment'
-        })
-        .catch(error => {
-            console.error('Error placing order:', error);
-        });
-            
+orderForm.addEventListener('submit', (event) => {
+    if (cart.length === 0) {
+        event.preventDefault(); 
+        alert('Your cart is empty. Please add items before proceeding to order.');
+        return;
+    }
 
-        cart.length = 0;
-        updateCartDisplay();
-    });
+    const cartDataInput = document.getElementById('cartData');
+    const orderData = {
+        items: cart,
+        total: parseFloat(cartTotalElement.textContent.replace('$', ''))
+    };
+
+    cartDataInput.value = JSON.stringify(orderData);
+});
+
 
     updateCartDisplay();
 });
