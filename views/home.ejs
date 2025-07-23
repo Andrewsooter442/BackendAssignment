@@ -27,12 +27,10 @@
     </header>
 
     <main class="main-container">
-        <!-- Menu Section -->
         <section class="menu-container">
             <div class="section-header">
                 <h2 class="section-title">Our Menu</h2>
                 <div class="filter-controls">
-                    <!-- Category Filter -->
 
                     <label for="categoryFilter" class="filter-label">Filter by Category:</label>
                     <select id="categoryFilter" class="category-filter">
@@ -55,7 +53,6 @@
                 </div>
             </div>
 
-            <!-- Menu Categories and Items -->
            <div id="menuContainer" class="menu-list">
                 <% menu.categories.forEach(category => { %>
                     <% const itemsInCategory = menu.items.filter(item => item.category_id === category.category_id && item.item_id !== null); %>
@@ -146,7 +143,6 @@
             </div>
 
             
-        <!-- Group the orders -->
                 <%
                 const groupedOrders = {};
 

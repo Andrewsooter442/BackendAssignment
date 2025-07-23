@@ -4,7 +4,7 @@ import { verifyJWT} from '../middleware/login/verifyJWT.js';
 import { validateSignupData } from '../middleware/login/signupValidaer.js';
 import { validateLoginData } from '../middleware/login/loginValidator.js';
 import { handelGetHome } from '../controllers/kitchen.js';
-import { handelCreateNewUser, handelGetHomePage, handelLogin, handelSignup, } from '../controllers/user.js'
+import { handelCreateNewUser, handelLogin, handelSignup, } from '../controllers/user.js'
 
 const router = express.Router();
 

@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
         cartTotalElement.textContent = `$${total.toFixed(2)}`;
     }
 
-    // Add to Cart button listener
     document.querySelectorAll('.add-to-cart-btn').forEach(button => {
         button.addEventListener('click', (event) => {
             const itemId = event.target.dataset.itemId;
@@ -105,22 +104,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const orderForm = document.getElementById('orderForm');
 
-orderForm.addEventListener('submit', (event) => {
-    if (cart.length === 0) {
-        event.preventDefault(); 
-        alert('Your cart is empty. Please add items before proceeding to order.');
-        return;
-    }
-
-    const cartDataInput = document.getElementById('cartData');
-    const orderData = {
-        items: cart,
-        total: parseFloat(cartTotalElement.textContent.replace('$', ''))
-    };
-
-    cartDataInput.value = JSON.stringify(orderData);
-});
-
-
+    orderForm.addEventListener('submit', (event) => {
+        if (cart.length === 0) {
+            event.preventDefault(); 
+            alert('Your cart is empty. Please add items before proceeding to order.');
+            return;
+        }
+        const cartDataInput = document.getElementById('cartData');
+        const orderData = {
+            items: cart,
+            total: parseFloat(cartTotalElement.textContent.replace('$', ''))
+        };
+        cartDataInput.value = JSON.stringify(orderData);
+    });
     updateCartDisplay();
 });
